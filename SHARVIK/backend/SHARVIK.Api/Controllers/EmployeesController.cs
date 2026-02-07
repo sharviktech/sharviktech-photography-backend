@@ -20,7 +20,9 @@ namespace SHARVIK.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var list = await _context.Employees.AsNoTracking().ToListAsync();
+            var list = new List<Employee> { new Employee { Id = 1, Name = "Alice Johnson", Email = "alice.johnson@example.com", Phone = "123-456-7890", Department = "HR", Designation = "Manager" }, new Employee { Id = 2, Name = "Bob Smith", Email = "bob.smith@example.com", Phone = "987-654-3210", Department = "IT", Designation = "Developer" }, new Employee { Id = 3, Name = "Charlie Brown", Email = "charlie.brown@example.com", Phone = "555-555-5555", Department = "Finance", Designation = "Analyst" } };
+              
+            //var list = await _context.Employees.AsNoTracking().ToListAsync();
             return Ok(list);
         }
 
