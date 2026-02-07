@@ -1,0 +1,49 @@
+<div class="view-container" *ngIf="employee">
+  <div class="view-card">
+    <h1><i class="fa-solid fa-user"></i> Employee Details</h1>
+
+    <div class="detail-section">
+      <div class="detail-group">
+        <label>Name</label>
+        <p>{{ employee.name }}</p>
+      </div>
+
+      <div class="detail-group">
+        <label>Email</label>
+        <p>
+          <i class="fa-solid fa-envelope"></i>
+          <a [href]="'mailto:' + employee.email">{{ employee.email }}</a>
+        </p>
+      </div>
+
+      <div class="detail-group">
+        <label>Phone</label>
+        <p>
+          <i class="fa-solid fa-phone"></i>
+          <a [href]="'tel:' + employee.phone">{{ employee.phone }}</a>
+        </p>
+      </div>
+
+      <div class="detail-group">
+        <label>Department</label>
+        <p>{{ employee.department }}</p>
+      </div>
+
+      <div class="detail-group">
+        <label>Designation</label>
+        <p>{{ employee.designation }}</p>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <a class="btn btn-edit" routerLink="/employees/edit/{{ employee.id }}">
+        <i class="fa-solid fa-pen"></i> Edit
+      </a>
+      <a class="btn btn-secondary" routerLink="/employees">
+        <i class="fa-solid fa-arrow-left"></i> Back
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 Photographer Booking Platform | PhotoBook</footer>

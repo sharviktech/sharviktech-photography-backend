@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Photographer Booking Platform | POC</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Arial}
+body{background:#f4f6f9;color:#333}
+
+/* NAVBAR */
+nav{
+ background:#1f2937;color:#fff;
+ display:flex;justify-content:space-between;
+ padding:15px 40px;align-items:center
+}
+nav ul{list-style:none;display:flex;gap:25px}
+nav li{cursor:pointer}
+nav li:hover{color:#38bdf8}
+
+/* HERO */
+.hero{
+ height:260px;
+ background:linear-gradient(120deg,#2563eb,#1e40af);
+ color:white;
+ display:flex;align-items:center;justify-content:center;
+ text-align:center
+}
+.hero h1{font-size:36px}
+
+/* CONTAINER */
+.container{padding:40px}
+
+/* FILTERS */
+.filters{
+ display:flex;gap:15px;margin-bottom:25px;flex-wrap:wrap
+}
+.filters select{
+ padding:10px;border-radius:6px;border:1px solid #ccc
+}
+
+/* PHOTOGRAPHER LIST */
+.photographers{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+ gap:25px
+}
+.card{
+ background:white;border-radius:12px;overflow:hidden;
+ box-shadow:0 10px 25px rgba(0,0,0,.1)
+}
+.card img{width:100%;height:180px;object-fit:cover}
+.card-body{padding:15px}
+.card-body h3{margin-bottom:5px}
+.view-btn{
+ margin-top:10px;
+ padding:8px 12px;
+ background:#2563eb;color:white;
+ border:none;border-radius:5px;
+ cursor:pointer;width:100%
+}
+
+/* PROFILE MODAL */
+.modal{
+ display:none;position:fixed;inset:0;
+ background:rgba(0,0,0,.6);
+ justify-content:center;align-items:center
+}
+.modal-content{
+ background:white;width:90%;max-width:700px;
+ padding:25px;border-radius:12px;
+ animation:slideUp .4s
+}
+
+/* PORTFOLIO */
+.gallery{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;margin-top:15px
+}
+.gallery img{
+ width:100%;height:120px;
+ object-fit:cover;border-radius:8px
+}
+
+.book-btn{
+ width:100%;margin-top:15px;
+ padding:12px;border:none;
+ background:#16a34a;color:white;
+ font-size:16px;border-radius:6px;
+ cursor:pointer
+}
+
+/* NOTIFICATION */
+.notification{
+ position:fixed;bottom:30px;right:30px;
+ background:#16a34a;color:white;
+ padding:15px 20px;border-radius:8px;
+ display:none
+}
+
+/* FOOTER */
+footer{
+ background:#1f2937;color:white;
+ text-align:center;padding:20px;margin-top:40px
+}
+
+@keyframes slideUp{
+ from{transform:translateY(40px);opacity:0}
+ to{transform:translateY(0);opacity:1}
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+ <h2><i class="fa-solid fa-camera"></i> PhotoBook</h2>
+ <ul>
+  <li>Home</li>
+  <li>Photographers</li>
+  <li>Bookings</li>
+  <li>Dashboard</li>
+  <li>Login</li>
+ </ul>
+</nav>
+
+<section class="hero">
+ <div>
+  <h1>Find & Book Professional Photographers</h1>
+  <p>Filter by Location, Budget & Event</p>
+ </div>
+</section>
+
+<div class="container">
+
+ <!-- FILTERS -->
+ <div class="filters">
+  <select id="locationFilter" onchange="applyFilters()">
+   <option value="All">All Locations</option>
+   <option value="New York">New York</option>
+   <option value="Los Angeles">Los Angeles</option>
+   <option value="Chicago">Chicago</option>
+  </select>
+
+  <select id="budgetFilter" onchange="applyFilters()">
+   <option value="All">All Budgets</option>
+   <option value="5000-10000">₹5k - ₹10k</option>
+   <option value="10001-20000">₹10k - ₹20k</option>
+   <option value="20001-30000">₹20k - ₹30k</option>
+  </select>
+
+  <select id="eventFilter" onchange="applyFilters()">
+   <option value="All">All Events</option>
+   <option value="Wedding">Wedding</option>
+   <option value="Portrait">Portrait</option>
+   <option value="Event">Event</option>
+  </select>
+ </div>
+
+ <!-- PHOTOGRAPHER LIST -->
+ <div class="photographers" id="photographerList"></div>
+
+</div>
+
+<footer>© 2026 Photographer Booking Platform | Demo POC</footer>
+
+<!-- PROFILE MODAL -->
+<div class="modal" id="profileModal">
+ <div class="modal-content">
+  <h2 id="name"></h2>
+  <p><b>Specialization:</b> <span id="type"></span></p>
+  <p><b>Location:</b> <span id="location"></span></p>
+  <p><b>Price:</b> <span id="price"></span></p>
+
+  <h3 style="margin-top:15px">Portfolio</h3>
+  <div class="gallery" id="portfolio"></div>
+
+  <button class="book-btn" onclick="book()">Book Photographer</button>
+ </div>
+</div>
+
+<div class="notification" id="notification">
+ ✅ Booking request sent to photographer
+</div>
+
+<script>
+// Photographer Data
+const photographers = [
+ {
+  name:"Wedding Specialist",
+  type:"Wedding",
+  location:"New York",
+  price:25000,
+  cover:"https://images.unsplash.com/photo-1519741497674-611481863552",
+  works:[
+   "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
+   "https://images.unsplash.com/photo-1519741497674-611481863552",
+   "https://images.unsplash.com/photo-1520857014576-2c4f4c972b57"
+  ]
+ },
+ {
+  name:"Portrait Expert",
+  type:"Portrait",
+  location:"Los Angeles",
+  price:8000,
+  cover:"https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91",
+  works:[
+   "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91",
+   "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+   "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df"
+  ]
+ },
+ {
+  name:"Event Pro",
+  type:"Event",
+  location:"Chicago",
+  price:15000,
+  cover:"https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f",
+  works:[
+   "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f",
+   "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+   "https://images.unsplash.com/photo-1515169067865-5387ec356754"
+  ]
+ }
+];
+
+// Render Photographers
+const list = document.getElementById("photographerList");
+function render(data){
+ list.innerHTML="";
+ if(data.length===0){
+  list.innerHTML="<p>No photographers match your filters.</p>"; return;
+ }
+ data.forEach(p=>{
+  list.innerHTML+=`
+  <div class="card">
+   <img src="${p.cover}">
+   <div class="card-body">
+    <h3>${p.name}</h3>
+    <p>${p.type} | ₹${p.price.toLocaleString()}</p>
+    <button class="view-btn" onclick='openProfile(${JSON.stringify(p)})'>View Profile</button>
+   </div>
+  </div>`;
+ });
+}
+render(photographers);
+
+// Filter Logic
+function applyFilters(){
+ const loc = document.getElementById("locationFilter").value;
+ const budget = document.getElementById("budgetFilter").value;
+ const evt = document.getElementById("eventFilter").value;
+
+ const filtered = photographers.filter(p=>{
+  let ok=true;
+  if(loc!=="All") ok = ok && p.location===loc;
+  if(evt!=="All") ok = ok && p.type===evt;
+  if(budget!=="All"){
+   const [min,max] = budget.split("-").map(Number);
+   ok = ok && p.price>=min && p.price<=max;
+  }
+  return ok;
+ });
+ render(filtered);
+}
+
+// Open Profile Modal
+function openProfile(p){
+ document.getElementById("name").innerText=p.name;
+ document.getElementById("type").innerText=p.type;
+ document.getElementById("location").innerText=p.location;
+ document.getElementById("price").innerText=`₹${p.price.toLocaleString()}`;
+ document.getElementById("portfolio").innerHTML=p.works.map(i=>`<img src="${i}">`).join("");
+ document.getElementById("profileModal").style.display="flex";
+}
+
+// Close Modal
+window.onclick=e=>{
+ if(e.target.id==="profileModal")
+  e.target.style.display="none";
+}
+
+// Book photographer
+function book(){
+ document.getElementById("profileModal").style.display="none";
+ const n=document.getElementById("notification");
+ n.style.display="block";
+ setTimeout(()=>n.style.display="none",3000);
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+<div class="employees-container">
+  <div class="employees-header">
+    <h1>Employee Management</h1>
+    <button class="btn btn-add" routerLink="/employees/add">
+      <i class="fa-solid fa-plus"></i> Add Employee
+    </button>
+  </div>
+
+  <div class="table-responsive">
+    <table class="employees-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Department</th>
+          <th>Designation</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let e of employees">
+          <td>{{e.Name}}</td>
+          <td>{{e.Email}}</td>
+          <td>{{e.Phone}}</td>
+          <td>{{e.Department}}</td>
+          <td>{{e.Designation}}</td>
+          <td>
+            <button class="btn btn-sm btn-info" (click)="view(e.id)" title="View">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+            <button class="btn btn-sm btn-warning" (click)="edit(e.id)" title="Edit">
+              <i class="fa-solid fa-pen"></i>
+            </button>
+            <button class="btn btn-sm btn-danger" (click)="delete(e.id)" title="Delete">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="employees.length === 0" class="no-employees">
+    <i class="fa-solid fa-users"></i>
+    <p>No employees found. <a routerLink="/employees/add">Add one now</a></p>
+  </div>
+</div>
+
+<footer>© 2026 Photographer Booking Platform | PhotoBook</footer>

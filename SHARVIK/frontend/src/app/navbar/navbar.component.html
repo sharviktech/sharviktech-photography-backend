@@ -1,0 +1,11 @@
+<nav>
+  <h2><i class="fa-solid fa-camera"></i> PhotoBook</h2>
+  <ul>
+    <li routerLink="/" (click)="navigate('home')" [class.active]="currentRoute === 'home'">Home</li>
+    <li routerLink="/photographers" (click)="navigate('photographers')" [class.active]="currentRoute === 'photographers'">Photographers</li>
+    <li routerLink="/bookings" (click)="navigate('bookings')" [class.active]="currentRoute === 'bookings'">Bookings</li>
+    <li routerLink="/dashboard" (click)="navigate('dashboard')" [class.active]="currentRoute === 'dashboard'">Dashboard</li>
+    <li routerLink="/login" (click)="navigate('login')" [class.active]="currentRoute === 'login'">Login</li>
+  </ul>
+</nav>
+

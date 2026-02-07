@@ -1,0 +1,73 @@
+<section class="hero">
+  <div>
+    <h1>Find & Book Professional Photographers</h1>
+    <p>Filter by Location, Budget & Event</p>
+  </div>
+</section>
+
+<div class="container">
+  <!-- FILTERS -->
+  <div class="filters">
+    <select [(ngModel)]="selectedLocation" (change)="applyFilters()">
+      <option value="">All Locations</option>
+      <option value="New York">New York</option>
+      <option value="Los Angeles">Los Angeles</option>
+      <option value="Chicago">Chicago</option>
+    </select>
+
+    <select [(ngModel)]="selectedBudget" (change)="applyFilters()">
+      <option value="">All Budgets</option>
+      <option value="5000-10000">₹5k - ₹10k</option>
+      <option value="10001-20000">₹10k - ₹20k</option>
+      <option value="20001-30000">₹20k - ₹30k</option>
+    </select>
+
+    <select [(ngModel)]="selectedEvent" (change)="applyFilters()">
+      <option value="">All Events</option>
+      <option value="Wedding">Wedding</option>
+      <option value="Portrait">Portrait</option>
+      <option value="Event">Event</option>
+    </select>
+  </div>
+
+  <!-- PHOTOGRAPHER LIST -->
+  <div class="photographers">
+    <div class="card" *ngFor="let photographer of filteredPhotographers">
+      <img [src]="photographer.cover" alt="{{ photographer.name }}">
+      <div class="card-body">
+        <h3>{{ photographer.name }}</h3>
+        <p>{{ photographer.type }} | ₹{{ photographer.price | number }}</p>
+        <button class="view-btn" (click)="openProfile(photographer)">View Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="filteredPhotographers.length === 0" class="no-results">
+    <p>No photographers match your filters.</p>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal" [style.display]="selectedPhotographer ? 'flex' : 'none'" (click)="closeProfile($event)">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <span class="close-btn" (click)="closeProfile()">&times;</span>
+    <h2>{{ selectedPhotographer?.name }}</h2>
+    <p><b>Specialization:</b> <span>{{ selectedPhotographer?.type }}</span></p>
+    <p><b>Location:</b> <span>{{ selectedPhotographer?.location }}</span></p>
+    <p><b>Price:</b> <span>₹{{ selectedPhotographer?.price | number }}</span></p>
+
+    <h3 style="margin-top: 15px">Portfolio</h3>
+    <div class="gallery">
+      <img *ngFor="let work of selectedPhotographer?.works" [src]="work" alt="Portfolio">
+    </div>
+
+    <button class="book-btn" (click)="book()">Book Photographer</button>
+  </div>
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notification" [style.display]="showNotification ? 'block' : 'none'">
+  ✅ Booking request sent to photographer
+</div>
+
+<footer>© 2026 Photographer Booking Platform | PhotoBook</footer>
